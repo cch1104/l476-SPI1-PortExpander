@@ -26,7 +26,10 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-
+#define IODIRA 0x00
+#define MCP_GPIOA 0x12
+char SPI_ADDRESS = 0x40;
+#define CS GPIO_PIN_0
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -56,6 +59,18 @@ static void MX_SPI1_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+void SEND(char RegAddr, char data){
+	uint8_t buff[3];
+
+	HAL_GPIO_WritePin(GPIOC, CS, GPIO_PIN_RESET);
+
+	buff[0]=SPI_ADDRESS;
+	buff[1]=RegAddr;
+	buff[2]=data;
+	HAL_SPI_Transmit(&hspi1, buff, 3, 1000);
+
+	HAL_GPIO_WritePin(GPIOC, CS, GPIO_PIN_SET);
+}
 
 /* USER CODE END 0 */
 
@@ -90,13 +105,18 @@ int main(void)
   MX_GPIO_Init();
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
-
+  SEND(IODIRA, 0xFE);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  SEND(MCP_GPIOA, 0);
+	  HAL_Delay(1000);
+
+	  SEND(MCP_GPIOA, 1);
+	  HAL_Delay(1000);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -182,7 +202,7 @@ static void MX_SPI1_Init(void)
   hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
   hspi1.Init.CRCPolynomial = 7;
   hspi1.Init.CRCLength = SPI_CRC_LENGTH_DATASIZE;
-  hspi1.Init.NSSPMode = SPI_NSS_PULSE_ENABLE;
+  hspi1.Init.NSSPMode = SPI_NSS_PULSE_DISABLE;
   if (HAL_SPI_Init(&hspi1) != HAL_OK)
   {
     Error_Handler();
