@@ -105,6 +105,7 @@ int main(void)
   MX_GPIO_Init();
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
+  HAL_SPI_Init(&hspi1);
   SEND(IODIRA, 0xFE);
   /* USER CODE END 2 */
 
