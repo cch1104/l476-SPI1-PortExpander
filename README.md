@@ -257,3 +257,6 @@ Through this project, I gained hands-on experience with:
 
 ---
 
+## Result Video
+
+https://www.youtube.com/watch?v=sok-7PsAbMg&list=PLptwIzMi4Cx3JMHudER0pLiIN8LfO7dGp
